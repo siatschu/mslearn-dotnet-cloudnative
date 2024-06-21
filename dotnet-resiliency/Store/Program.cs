@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Http.Resilience;
+
 using Store.Components;
 using Store.Services;
 
@@ -9,6 +11,9 @@ builder.Services.AddHttpClient<ProductService>(c =>
     var url = builder.Configuration["ProductEndpoint"] ?? throw new InvalidOperationException("ProductEndpoint is not set");
 
     c.BaseAddress = new(url);
+}).AddStandardResilienceHandler(options =>
+{
+    options.Retry.MaxRetryAttempts = 7;
 });
 
 // Add services to the container.
